@@ -1,5 +1,18 @@
 import sqlite3
 
+def conectar_db():
+    try:
+        conn = sqlite3.connect('clientes.db')
+        return conn, conn.cursor()
+
+    except sqlite3.Error as erro:
+        print(f'ERRO {erro}')
+        return None, None
+
+def desconectar_db(conn):
+    if conn:
+        conn.close()
+
 class Clientes:
     def __init__(self, nome, numero):
         self.nome = nome
@@ -11,9 +24,8 @@ class Clientes:
     
     @classmethod
     def aumentar_divida(cls, cliente, divida):
+        conn, cursor = conectar_db()
         try:
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
 
             cursor.execute(f"SELECT divida FROM clientes WHERE nome = '{cliente}'")
             divida_db = cursor.fetchone()
@@ -28,14 +40,12 @@ class Clientes:
             print(f'ERRO {erro}')
         
         finally:
-            if conn:
-                conn.close()
+            desconectar_db(conn)
         
     @classmethod
     def diminuir_divida(cls, cliente, divida):
+        conn, cursor = conectar_db()
         try:
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
 
             cursor.execute(f"SELECT divida FROM clientes WHERE nome = '{cliente}'")
             divida_db = cursor.fetchone()
@@ -50,15 +60,13 @@ class Clientes:
             print(f'ERRO {erro}')
         
         finally:
-            if conn:
-                conn.close()
+            desconectar_db(conn)
 
         
     #Insere dados na DB
     def inserir_cliente_db(self):
+        conn, cursor = conectar_db()
         try:
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
 
             # Usando '?' para passar parâmetros de forma segura e especificando os nomes das colunas
             cursor.execute('INSERT INTO clientes (nome, numero, divida) VALUES (?, ?, ?)', (self.nome, self.numero, self.divida))
@@ -70,11 +78,12 @@ class Clientes:
         except sqlite3.Error as erro:
             print(f'Erro ao inserir cliente: {erro}')
 
+        finally:
+            desconectar_db(conn)
     
     def mostrar_db():
+        conn, cursor = conectar_db()
         try:
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
 
             cursor.execute('SELECT * from clientes')
             clientes = cursor.fetchall()  # Recupera todos os registros da tabela 'clientes'
@@ -88,14 +97,12 @@ class Clientes:
             print(f'ERRO {erro}')
         
         finally:
-            if conn:
-                conn.close()
+            desconectar_db(conn)
 
     @classmethod
     def deletar_cliente(cls, nome):
+        conn, cursor = conectar_db()
         try:
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
 
             cursor.execute('DELETE FROM clientes WHERE nome = ?', (nome,))
 
@@ -108,14 +115,12 @@ class Clientes:
             print(f'ERRO {erro}')
         
         finally:
-           if conn:
-                conn.close()
+           desconectar_db(conn)
 
     @classmethod
     def zerar_divida(cls, nome):
         try:
-            conn = sqlite3.connect('clientes.db')
-            cursor = conn.cursor()
+            conn, cursor = conectar_db()
 
             cursor.execute('UPDATE clientes SET divida = 0 WHERE nome = ?', (nome,))
 
@@ -126,8 +131,7 @@ class Clientes:
             print(f'ERRO {erro}')
         
         finally:
-           if conn:
-                conn.close()
+            desconectar_db(conn)
 
 if __name__ == '__main__':
     #criar = Clientes('Teste', 191920)
