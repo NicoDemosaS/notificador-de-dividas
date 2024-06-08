@@ -30,6 +30,28 @@ class Clientes:
         finally:
             if conn:
                 conn.close()
+        
+    @classmethod
+    def diminuir_divida(cls, cliente, divida):
+        try:
+            conn = sqlite3.connect('clientes.db')
+            cursor = conn.cursor()
+
+            cursor.execute(f"SELECT divida FROM clientes WHERE nome = '{cliente}'")
+            divida_db = cursor.fetchone()
+
+            nova_divida = divida_db[0] - divida
+            cursor.execute(f"UPDATE clientes SET divida = {nova_divida} WHERE nome = '{cliente}';")
+
+            conn.commit()
+            conn.close()
+        
+        except sqlite3.Error as erro:
+            print(f'ERRO {erro}')
+        
+        finally:
+            if conn:
+                conn.close()
 
         
     #Insere dados na DB
@@ -89,9 +111,29 @@ class Clientes:
            if conn:
                 conn.close()
 
+    @classmethod
+    def zerar_divida(cls, nome):
+        try:
+            conn = sqlite3.connect('clientes.db')
+            cursor = conn.cursor()
+
+            cursor.execute('UPDATE clientes SET divida = 0 WHERE nome = ?', (nome,))
+
+            conn.commit()
+            conn.close()
+
+        except sqlite3.Error as erro:
+            print(f'ERRO {erro}')
+        
+        finally:
+           if conn:
+                conn.close()
+
 if __name__ == '__main__':
     #criar = Clientes('Teste', 191920)
     #criar.inserir_cliente_db()
     Clientes.aumentar_divida('Teste', 10)
     #Clientes.deletar_cliente('Cliente')
+    Clientes.mostrar_db()
+    Clientes.zerar_divida('Teste')
     Clientes.mostrar_db()
