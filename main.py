@@ -118,6 +118,32 @@ class Clientes:
            desconectar_db(conn)
 
     @classmethod
+    def mostrar_um_cliente(cls, nome):
+        conn, cursor = conectar_db()
+        try:
+
+            cursor.execute('SELECT * FROM clientes WHERE nome = ?', (nome,))
+            cliente = cursor.fetchone()
+
+            if cliente:
+                print(f'Dados do cliente:')
+                print(f'Nome: {cliente[1]}')  # Supondo que o nome está na primeira coluna
+                print(f'Numero: {cliente[2]}')  # Supondo que outros dados estão na segunda coluna, e assim por diante
+                print(f'Divida {cliente[3]}')
+            else:
+                print(f'Cliente {nome} não encontrado.')
+
+            conn.commit()
+            conn.close()
+        
+
+        except sqlite3.Error as erro:
+            print(f'ERRO {erro}')
+        
+        finally:
+           desconectar_db(conn)
+
+    @classmethod
     def zerar_divida(cls, nome):
         try:
             conn, cursor = conectar_db()

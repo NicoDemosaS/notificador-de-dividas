@@ -1,12 +1,14 @@
 import os
 from main import Clientes
+from whatzapchrome import *
 
 def iniciar_whatssap():
     # seleniumstuff();
     # Open the web whatssap browser
     # Wait for registration
     # Ok message
-    pass
+
+    return abrir_chrome()
 
 def setup():
     os.system('cls')
@@ -19,25 +21,29 @@ def setup():
     print('5 - Zerar Divida')
     print('6 - Mostrar Inf de um Cliente')
     print('7 - Mostrar Database')
+    print('8 - Teste Selenium')
     print("-=-"*10)
 
     opcao = int(input('Escolha: '))
     if opcao == 1:
         inserir_cliente()
-    if opcao == 2:
+    elif opcao == 2:
         deletar_cliente()
-    if opcao == 3:
+    elif opcao == 3:
         adicionar_divida()
-    if opcao == 4:
+    elif opcao == 4:
         diminuir_divida()
-    if opcao == 5:
+    elif opcao == 5:
         zerar_divida()
-    if opcao == 6:
+    elif opcao == 6:
         mostrar_cliente()
-    if opcao == 7:
+    elif opcao == 7:
         mostrar_todos_clientes()
+    elif opcao == 8:
+        driver = abrir_chrome()
+        esperar_login(driver)
+        pass
 
-        
 def inserir_cliente():  # Opçao 1
     # Add client to the database
     # Add Name and Number
@@ -107,8 +113,13 @@ def zerar_divida(): # Opçao 5
 
 def mostrar_cliente(): # Opçao 6
     # Show inf about one Client
-    print('Mostrando Informaçoes do Cliente:')
-
+    name = input('Nome do Cliente: ')
+    print(f'Mostrando Informaçoes do Cliente: {name}')
+    Clientes.mostrar_um_cliente(name)
+    
+    
+    input('Confirmar: ')
+    setup()
 
 def mostrar_todos_clientes(): # Opçao 7
     # Show all the clients
