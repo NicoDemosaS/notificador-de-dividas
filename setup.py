@@ -1,5 +1,5 @@
 import os
-from main import Clientes
+from sqlfunction import SqlLite
 from whatzapchrome import *
 
 def iniciar_whatssap():
@@ -21,7 +21,8 @@ def setup():
     print('5 - Zerar Divida')
     print('6 - Mostrar Inf de um Cliente')
     print('7 - Mostrar Database')
-    print('8 - Teste Selenium')
+    print('8 - Logar Chrome')
+    # print('9 - Enviar Mensagem Teste')
     print("-=-"*10)
 
     opcao = int(input('Escolha: '))
@@ -40,9 +41,19 @@ def setup():
     elif opcao == 7:
         mostrar_todos_clientes()
     elif opcao == 8:
+        global driver
         driver = abrir_chrome()
         esperar_login(driver)
-        pass
+        setup()
+    #elif opcao == 9:
+    #    nome = 'Gab'
+    #    numero = '45999232799'
+    #    divida = 500
+    #    mensagem = f'{nome} voce tem uma dividade de {divida}'
+
+        #mandar_mensagem(driver, numero, mensagem)
+        
+        #setup()
 
 def inserir_cliente():  # Opçao 1
     # Add client to the database
@@ -54,9 +65,11 @@ def inserir_cliente():  # Opçao 1
     # Verify Number
     number = input(f'numero a adicionar a {name}:')
     
-    cliente = Clientes(name, number)
-    Clientes.inserir_cliente_db(cliente)
+    # Create a new client
+    cliente = SqlLite(name, number)
+    SqlLite.inserir_cliente_db(cliente)
     
+    # Terminal Message
     print(f'Inserindo Cliente: {name} com numero {number} ao Banco de Dados')
     input('CONFIRMAR: ')
     
@@ -69,7 +82,7 @@ def deletar_cliente(): # Opçao 2
     name = input('Cliente a Deletar: ')
     print(f'Deletando Cliente: {name} do Banco de Dados')
     
-    Clientes.deletar_cliente(name)
+    SqlLite.deletar_cliente(name)
     
     input('Confirmar: ')
     setup()
@@ -82,7 +95,16 @@ def adicionar_divida(): # Opçao 3
     name = input('Nome do Cliente: ')
     divida = int(input('Divida a aumentar: '))
     print(f'Adicionando divida de: {divida} ao Cliente: {name}')
-    Clientes.aumentar_divida(name, divida)
+    SqlLite.aumentar_divida(name, divida)
+
+
+
+    # Send message about new debt
+    numero = SqlLite.mostrar_inf(name, "numero")
+    nova_divida = SqlLite.mostrar_inf(name, "divida")
+    mensagem = f'{name} foi adicionado R${divida} a sua conta, sua nova divida é de R${nova_divida}'
+    
+    mandar_mensagem(driver, numero, mensagem)
 
     # Send a message to client warning about the new debt
     input('Confirmar: ')
@@ -96,7 +118,13 @@ def diminuir_divida(): # Opçao 4
     name = input('Nome do Cliente: ')
     dividapaga = int(input('Divida Paga: '))
     print(f'Diminuindo divida: {dividapaga} do Cliente: {name}')
-    Clientes.diminuir_divida(name, dividapaga)
+    SqlLite.diminuir_divida(name, dividapaga)
+
+    #Send message about the debt
+    numero = SqlLite.mostrar_inf(name, "numero")
+    nova_divida = SqlLite.mostrar_inf(name, "divida")
+    mensagem = f'{name} voce pagou R${dividapaga} sua nova divida é de {nova_divida}'
+    mandar_mensagem(driver, numero, mensagem)
 
     input('Confirmar: ')
     setup()
@@ -106,7 +134,13 @@ def zerar_divida(): # Opçao 5
     # Send message to the client
     name = input('Nome do Cliente: ')
     print(f'Zerando divida do Cliente: {name}')
-    Clientes.zerar_divida(name)
+    SqlLite.zerar_divida(name)
+
+    # Send message about the debt
+    numero = SqlLite.mostrar_inf(name, "numero")
+    nova_divida = SqlLite.mostrar_inf(name, "divida")
+    mensagem = f'{name} voce pagou toda sua divida, sua nova divida é de {nova_divida}'
+    mandar_mensagem(driver, numero, mensagem)
 
     input('Confirmar: ')
     setup()
@@ -115,16 +149,16 @@ def mostrar_cliente(): # Opçao 6
     # Show inf about one Client
     name = input('Nome do Cliente: ')
     print(f'Mostrando Informaçoes do Cliente: {name}')
-    Clientes.mostrar_um_cliente(name)
+    SqlLite.mostrar_um_cliente(name)
     
     
     input('Confirmar: ')
     setup()
 
 def mostrar_todos_clientes(): # Opçao 7
-    # Show all the clients
+    # Show all DB the clients
     print('Mostrando dados do Banco de Dados')
-    Clientes.mostrar_db()
+    SqlLite.mostrar_db()
 
     input('Confirmar: ')
     setup()

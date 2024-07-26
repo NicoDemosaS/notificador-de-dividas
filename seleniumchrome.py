@@ -15,7 +15,6 @@ xpath = "/html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span[2]/d
 def abrir_chrome():
     driver = webdriver.Chrome()
     driver.get("https://web.whatsapp.com/")
-    esperar_login()
     return driver
 
 def esperar_login(driver):
@@ -25,8 +24,7 @@ def esperar_login(driver):
 # numero = "459999999"
 # mensagem = "Olá, estou enviando esta mensagem via Selenium!"
  
-def mandar_mensagem(driver, nome, numero, divida):
-    mensagem = f"{nome} sua nova divida é {divida}"
+def mandar_mensagem(driver, numero, mensagem):
     link = f"https://web.whatsapp.com/send?phone={numero}&text={mensagem}"
  
     driver.get(link)
@@ -42,4 +40,9 @@ def fechar_navegador(driver):
     driver.quit()
 
 if __name__ == '__main__':
-    pass
+    driv = abrir_chrome()
+    esperar_login(driv)
+    nome = 'Nicolas'
+    numero = '45999232707'
+    divida = 500
+    mandar_mensagem(driv, nome, numero, divida )

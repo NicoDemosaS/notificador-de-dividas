@@ -13,7 +13,7 @@ def desconectar_db(conn):
     if conn:
         conn.close()
 
-class Clientes:
+class SqlLite:
     def __init__(self, nome, numero):
         self.nome = nome
         self.numero = numero
@@ -144,6 +144,31 @@ class Clientes:
            desconectar_db(conn)
 
     @classmethod
+    def mostrar_inf(cls, nome, inf):
+        conn, cursor = conectar_db()
+        try:
+            cursor.execute('SELECT * FROM clientes WHERE nome = ?', (nome,))
+            cliente = cursor.fetchone()
+
+            if cliente:
+                if inf == 'numero':
+                    return cliente[2]
+                elif inf == 'divida':
+                    return cliente[3]
+                else:
+                    print(f'Informaçao de {nome} não encontrado.')
+
+            conn.commit()
+            conn.close()
+        
+
+        except sqlite3.Error as erro:
+            print(f'ERRO {erro}')
+        
+        finally:
+           desconectar_db(conn)
+
+    @classmethod
     def zerar_divida(cls, nome):
         try:
             conn, cursor = conectar_db()
@@ -160,10 +185,10 @@ class Clientes:
             desconectar_db(conn)
 
 if __name__ == '__main__':
-    #criar = Clientes('Teste', 191920)
+    #criar = SqlLite('Teste', 191920)
     #criar.inserir_cliente_db()
-    Clientes.aumentar_divida('Teste', 10)
-    #Clientes.deletar_cliente('Cliente')
-    Clientes.mostrar_db()
-    Clientes.zerar_divida('Teste')
-    Clientes.mostrar_db()
+    SqlLite.aumentar_divida('Teste', 10)
+    #SqlLite.deletar_cliente('Cliente')
+    SqlLite.mostrar_db()
+    SqlLite.zerar_divida('Teste')
+    SqlLite.mostrar_db()
