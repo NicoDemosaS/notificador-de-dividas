@@ -1,6 +1,6 @@
 import os
 from sqlfunction import SqlLite
-from whatzapchrome import *
+from seleniumchrome import *
 
 def iniciar_whatssap():
     # seleniumstuff();

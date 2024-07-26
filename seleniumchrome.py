@@ -13,7 +13,9 @@ xpath1 = "/html/body/div[1]/div/div/div[2]/div[3]/header/header/div/div/h1"
 xpath = "/html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p" 
 
 def abrir_chrome():
-    driver = webdriver.Chrome()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("user-data-dir=C:/Users/bar/AppData/Local/Google/Chrome/User Data")  # Ajuste conforme necessário
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://web.whatsapp.com/")
     return driver
 
@@ -30,10 +32,12 @@ def mandar_mensagem(driver, numero, mensagem):
     driver.get(link)
 
     wait = WebDriverWait(driver, timeout=120)
-
-# Espera até que o elemento seja visível na página
+    
+    # Espera até que o elemento seja visível na página
+    
     elemento = wait.until(lambda driver: driver.find_element(By.XPATH, xpath))
     driver.find_element(By.XPATH, xpath).send_keys(Keys.ENTER)
+    print('Mensagem Enviada!')
 
 def fechar_navegador(driver):
     input("Fechar Navegador")
