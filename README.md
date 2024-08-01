@@ -2,3 +2,8 @@
 
 Uso SQLite e Selenium, para salvar registros de dividas, nome e numero de telefone de clientes, permitindo
 com o selenium envio de mensagens automaticas, informando o cliente sobre sua divida.
+
+
+- Pretendo melhorar a Interface Grafica, para melhor utilizaçao do usuario.
+- criar uma aplicaçao web
+- hostear o serviço de envio de mensagens do selenium
