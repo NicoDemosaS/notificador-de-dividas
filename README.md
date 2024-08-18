@@ -31,3 +31,7 @@ O **Notificador de Dividas** é um software que utiliza SQLite e Selenium para g
 - Criar uma aplicação web.
 - Hospedar o serviço de envio de mensagens do Selenium.
 
+## Corrigir BUGS!
+
+- Ao inves de parar o software quando o driver nao esta ativo, avisar para ativa-lo.
+
